@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 
 const EditNote = (props) => {
 
+  const [userDetails, setUserDetails] = useState({email: "", password: ""})
+
+  const handleUpdateNoteSubmit = async (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    const response = await fetch('https://app-brainstormings.herokuapp.com/note', {
+      method: 'put',
+      body: {
+        title: event.target.title.value,
+        description: event.target.description.value,
+      }
+    })
+    if (response.ok) {
+      props.history.push('/notes');
+    } else {
+      return false
+    }
+  }
+
   return (
     <div>
-      <header>
+      <header onSubmit={handleUpdateNoteSubmit}>
         <h1>EditNote Page</h1>
       </header>
       <form>

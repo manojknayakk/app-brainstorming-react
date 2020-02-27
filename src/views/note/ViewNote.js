@@ -1,6 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ViewNote = (props) => {
+
+  const [userDetails, setUserDetails] = useState({email: "", password: ""})
+
+  useEffect(
+    async () => {
+      const response = await fetch('https://app-brainstormings.herokuapp.com/note/:id', {
+        method: 'get'
+      })
+      if (response.ok) {
+        props.history.push('/notes');
+      } else {
+        return false
+      }
+    },
+    [],
+  );
 
   return (
     <div>
