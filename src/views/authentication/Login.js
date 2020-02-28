@@ -11,20 +11,25 @@ const Login = (props) => {
     if (event) {
       event.preventDefault();
     }
-    const response = await fetch('https://app-brainstormings.herokuapp.com/authenticate', {
+    const data = {
+      email: event.target.email.value,
+      password: event.target.password.value
+    }
+    const response = await fetch( process.env.REACT_APP_BASE_URL + '/authenticate', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       method: 'post',
-      body: {
-        email: event.target.email.value,
-        password: event.target.password.value
-      }
+      body: JSON.stringify(data)
     })
     if (response.ok) {
+      const userData = await response.json()
       const newState = {
         loggedIn: true, 
-        Authentication: "1234567890-123128378912",
-        firstName: "John",
-        lastName: "Cena",
-        email: "john.cena@nasa.com"
+        Authentication: userData.auth_token,
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        email: userData.email
       }
       dispatch({ type: 'login', newState: newState });
       props.history.push('/notes');
@@ -47,7 +52,7 @@ const Login = (props) => {
           <label>Password</label>
           <input type="password" name="password"/>
         </div>
-        <button type="submit">Sign Up</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );

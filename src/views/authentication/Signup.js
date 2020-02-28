@@ -11,23 +11,28 @@ const Signup = (props) => {
     if (event) {
       event.preventDefault();
     }
-    const response = await fetch('https://app-brainstormings.herokuapp.com/signup', {
+    const data = {user: {
+      first_name: event.target.firstName.value,
+      last_name: event.target.lastName.value,
+      email: event.target.email.value,
+      password: event.target.password.value,
+      password_confirmation: event.target.passworConfirmation.value
+    }}
+    const response = await fetch( process.env.REACT_APP_BASE_URL + '/users', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       method: 'post',
-      body: {
-        first_name: event.target.firstName.value,
-        last_name: event.target.lastName.value,
-        email: event.target.email.value,
-        password: event.target.password.value,
-        confirm_password: event.target.confirmPassword.value
-      }
+      body: JSON.stringify(data)
     })
     if (response.ok) {
+      const userData = await response.json()
       const newState = {
         loggedIn: true, 
-        Authentication: "1234567890-123128378912",
-        firstName: "John",
-        lastName: "Cena",
-        email: "john.cena@nasa.com"
+        Authentication: userData.auth_token,
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        email: userData.email
       }
       dispatch({ type: 'login', newState: newState });
       props.history.push('/notes');
@@ -58,7 +63,7 @@ const Signup = (props) => {
         </div>
         <div>
           <label>Confirm Password</label>
-          <input type="password" name="confirmPassword" required/>
+          <input type="password" name="passworConfirmation" required/>
         </div>
         <button type="submit">Sign Up</button>
       </form>

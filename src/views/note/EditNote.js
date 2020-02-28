@@ -8,7 +8,7 @@ const EditNote = (props) => {
     if (event) {
       event.preventDefault();
     }
-    const response = await fetch('https://app-brainstormings.herokuapp.com/note', {
+    const response = await fetch( process.env.REACT_APP_BASE_URL + '/note', {
       method: 'put',
       body: {
         title: event.target.title.value,

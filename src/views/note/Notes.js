@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { store } from '../../store';
 
 const Notes = (props) => {
-
+  const globalState = useContext(store);
   const [userDetails, setUserDetails] = useState({email: "", password: ""})
 
-  useEffect(
-    async () => {
-      const response = await fetch('https://app-brainstormings.herokuapp.com/notes', {
+  useEffect( () => {
+    const fetchData = async () => {
+      const response = await fetch( process.env.REACT_APP_BASE_URL + '/notes', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': globalState.state.Authentication
+        },
         method: 'get'
       })
       if (response.ok) {
@@ -14,9 +19,9 @@ const Notes = (props) => {
       } else {
         return false
       }
-    },
-    [],
-  );
+    }
+    fetchData();
+  },[]);
   
   const numbers = [1, 2, 3, 4, 5];
   const listItems = numbers.map((number) =>

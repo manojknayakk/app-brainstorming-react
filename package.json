@@ -2,7 +2,7 @@
   "name": "app-brainstorming-react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://app-brainstormings.herokuapp.com/",
+  "proxy": "https://app-brainstormings.herokuapp.com",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

@@ -4,9 +4,9 @@ const ViewNote = (props) => {
 
   const [userDetails, setUserDetails] = useState({email: "", password: ""})
 
-  useEffect(
-    async () => {
-      const response = await fetch('https://app-brainstormings.herokuapp.com/note/:id', {
+  useEffect( () => {
+    const fetchData = async () => {
+      const response = await fetch( process.env.REACT_APP_BASE_URL + '/note/:id', {
         method: 'get'
       })
       if (response.ok) {
@@ -14,9 +14,9 @@ const ViewNote = (props) => {
       } else {
         return false
       }
-    },
-    [],
-  );
+    }
+    fetchData();
+  },[]);
 
   return (
     <div>
