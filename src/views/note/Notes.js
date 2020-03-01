@@ -1,8 +1,10 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { store } from '../../store';
-import { Link, Route, Switch, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAlert } from 'react-alert'
 
 const Notes = (props) => {
+  const alert = useAlert()
 
   const globalState = useContext(store);
   
@@ -22,7 +24,7 @@ const Notes = (props) => {
         console.log(responseJson)
         setNotes(responseJson)
       } else {
-        console.log(responseJson)
+        alert.show("Server is down.")
         return false
       }
     }
@@ -40,7 +42,7 @@ const Notes = (props) => {
     if (response.ok) {
       setNotes(notes.filter(data => data.id !== id));
     } else {
-      return false
+      alert.show("Not authorized")
     }
     return
   }
@@ -64,10 +66,12 @@ const Notes = (props) => {
     }else{
       return (
         <div key={data.id} className="col-12 col-md-6 col-xl-4">
-          <Link className="d-flex flex-wrap p-3 block" to={"/view_note/" + data.id}>
-            <div className="label w-100 text-right">{data.title}</div>
-            <div className="description">{data.description}</div>
-          </Link>
+          <div className="d-flex flex-wrap block p-3">
+            <Link className="w-100 notes_card view" to={"/view_note/" + data.id}>
+                <div className="label w-100 text-right">{data.title}</div>
+                <div className="description">{data.description}</div>
+            </Link>
+          </div>
         </div>
       )
     }

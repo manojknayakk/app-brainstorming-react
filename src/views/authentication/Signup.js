@@ -2,8 +2,10 @@ import React, { useContext } from 'react';
 import { store } from '../../store';
 import { Link } from 'react-router-dom';
 
+import { useAlert } from 'react-alert'
 
 const Signup = (props) => {
+  const alert = useAlert()
 
   const globalState = useContext(store);
   const { dispatch } = globalState;
@@ -26,8 +28,8 @@ const Signup = (props) => {
       method: 'post',
       body: JSON.stringify(data)
     })
+    const userData = await response.json()
     if (response.ok) {
-      const userData = await response.json()
       const newState = {
         loggedIn: true, 
         Authentication: userData.auth_token,
@@ -38,7 +40,13 @@ const Signup = (props) => {
       dispatch({ type: 'login', newState: newState });
       props.history.push('/notes');
     } else {
-      return false
+      if(Object.keys(userData).length !== 0 ){
+        Object.keys(userData).forEach(function(json_key) {
+          userData[json_key].map((item, key) =>
+            alert.show(json_key + " " + item)
+          );
+        })
+      }
     }
   }
 

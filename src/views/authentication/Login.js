@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { store } from '../../store';
 import { Link } from 'react-router-dom';
+import { useAlert } from 'react-alert'
 
 const Login = (props) => {
+  const alert = useAlert()
 
   const globalState = useContext(store);
   const { dispatch } = globalState;
@@ -22,8 +24,8 @@ const Login = (props) => {
       method: 'post',
       body: JSON.stringify(data)
     })
+    const userData = await response.json()
     if (response.ok) {
-      const userData = await response.json()
       const newState = {
         loggedIn: true, 
         Authentication: userData.auth_token,
@@ -34,7 +36,10 @@ const Login = (props) => {
       dispatch({ type: 'login', newState: newState });
       props.history.push('/notes');
     } else {
-      return false
+      console.log(userData)
+      if (userData.error){
+        alert.show(userData.error.user_authentication);
+      }
     }
   }
 

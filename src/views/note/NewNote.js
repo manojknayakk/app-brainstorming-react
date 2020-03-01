@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { store } from '../../store';
 import Select from 'react-select'
+import { useAlert } from 'react-alert'
 
 const NewNote = (props) => {
+  const alert = useAlert()
 
   const globalState = useContext(store);
 
@@ -10,6 +12,8 @@ const NewNote = (props) => {
   const [userEmail, setUserEmail] = useState({})
   const [userRole, setUserRole] = useState({})
   const [roleOptions, setRoleOptions] = useState([])
+  const [description, setDescription] = useState("")
+  const [descriptionRow, setDescriptionRow] = useState(24)
 
   useEffect( () => {
     const fetchData = async () => {
@@ -24,13 +28,34 @@ const NewNote = (props) => {
         const roles_option = await response.json()
         setRoleOptions(roles_option)
       } else {
-        return false
+        alert.show("Server is down.")
+        props.history.push('/notes');
       }
+      return true
     }
     fetchData();
   },[]);
 
+  const handleInputDescription = (event) => {
+  	event.target.rows = descriptionRow;
+    const currentRows = ~~(event.target.scrollHeight / descriptionRow);
+    if (descriptionRow < currentRows) {
+    	event.target.rows = currentRows;
+    }
+    setDescriptionRow(currentRows)
+    setDescription(event.target.value)
+  }
+
   const addUser = async (e) => {
+    if (Object.keys(userEmail).length === 0 || Object.keys(userRole).length === 0){
+      if (Object.keys(userEmail).length === 0){
+        alert.show("Email is blank.")
+      }
+      if (Object.keys(userRole).length === 0){
+        alert.show("Please select a role.")
+      }
+      return false
+    }
     const data = {
       email: userEmail
     }
@@ -42,14 +67,16 @@ const NewNote = (props) => {
       method: 'post',
       body: JSON.stringify(data)
     })
+    const response_data = await response.json()
     if (response.ok) {
-      const response_data = await response.json()
       if (response_data.is_valid){
         const userDetails = {id: response_data.id, email: response_data.email}
         setShared((prevState) => ([...prevState, {email: userDetails, role: userRole}]));
+      }else{
+        alert.show("Invalid email id.")
       }
     } else {
-      return false
+      alert.show("Server is down.")
     }
   }
 
@@ -84,9 +111,16 @@ const NewNote = (props) => {
       method: 'post',
       body: JSON.stringify(data)
     })
+    const newNotesResponse = await response.json()
     if (response.ok) {
       props.history.push('/notes');
+      return true
     } else {
+      Object.keys(newNotesResponse).forEach(function(json_key) {
+        newNotesResponse[json_key].map((item, key) =>
+          alert.show(json_key + " " + item)
+        );
+      })
       return false
     }
   }
@@ -98,19 +132,17 @@ const NewNote = (props) => {
           <input className="form-control my-3" placeholder="Article Title" type="text" name="title" required />
         </div>
         <div>
-          <textarea name="description" className="form-control mb-3" placeholder="Article Description" required>
-        </textarea>
+          <textarea name="description" rows={descriptionRow} className="form-control mb-3" value={description} onChange={handleInputDescription} placeholder="Article Description" required></textarea>
         </div>
         {
           shared.map((val, idx)=> {
-            let email = `email-${idx}`, role = `role-${idx}`
             return (
               <div className="row" key={idx}>
                 <div className="col-md-5">
-                  <input className="form-control mb-3" type="text" placeholder={val.email.email} readonly></input>
+                  <input className="form-control mb-3" type="text" placeholder={val.email.email} readOnly></input>
                 </div>
                 <div className="col-md-4">
-                  <input className="form-control mb-3" type="text" placeholder={val.role.label} readonly></input>
+                  <input className="form-control mb-3" type="text" placeholder={val.role.label} readOnly></input>
                 </div>
                 <div className="col-md-3 add-button-container">
                   <a onClick={removeUser.bind(null, idx)} className="form-control btn btn-danger float-right mb-3" >Remove user</a> 
@@ -124,7 +156,6 @@ const NewNote = (props) => {
             <input
               type="text"
               name="email"
-              // id="email"
               className="form-control mb-3"
               placeholder="Email"
               onChange={event => setUserEmail(event.target.value)}
