@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { store } from '../../store';
+import { Link } from 'react-router-dom';
+
 
 const Signup = (props) => {
 
   const globalState = useContext(store);
   const { dispatch } = globalState;
-  const [userDetails, setUserDetails] = useState({email: "", password: ""})
 
   const handleSignupSubmit = async (event) => {
     if (event) {
@@ -42,32 +43,44 @@ const Signup = (props) => {
   }
 
   return (
-    <div>
-      <header>
-        <h1>Signup Page</h1>
-      </header>
-      <form onSubmit={handleSignupSubmit}>
-        <div>
-          <label>First Name</label>
-          <input type="text" name="firstName" required />
-          <label>Last Name</label>
-          <input type="text" name="lastName" required />
-        </div>
-        <div>
-          <label>Email Address</label>
-          <input type="email" name="email" required />
-        </div>
-        <div>
-          <label>Password</label>
-          <input type="password" name="password" required/>
-        </div>
-        <div>
-          <label>Confirm Password</label>
-          <input type="password" name="passworConfirmation" required/>
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
+    <div className="auth-wrapper">
+      <div className="auth-inner">
+        <form onSubmit={handleSignupSubmit}>
+          <h3>Sign Up</h3>
+
+          <div className="form-group">
+            <label>First name</label>
+            <input type="text" name="firstName" className="form-control" placeholder="First name" required/>
+          </div>
+
+          <div className="form-group">
+            <label>Last name</label>
+            <input type="text" name="lastName" className="form-control" placeholder="Last name" required/>
+          </div>
+
+          <div className="form-group">
+            <label>Email address</label>
+            <input type="email" name="email" className="form-control" placeholder="Enter email" required/>
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input type="password" name="password" className="form-control" placeholder="Enter password" required/>
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input type="password" name="passworConfirmation" className="form-control" placeholder="Confirm password" required/>
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
+          <p className="forgot-password text-right">
+            Already registered <Link to={"/login"}>Login</Link>
+          </p>
+        </form>
+      </div>
     </div>
+    
   );
 }
 

@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { store } from '../../store';
+import { Link } from 'react-router-dom';
 
 const Login = (props) => {
 
   const globalState = useContext(store);
   const { dispatch } = globalState;
-  const [userDetails, setUserDetails] = useState({email: "", password: ""})
 
   const handleLoginSubmit = async (event) => {
     if (event) {
@@ -39,21 +39,27 @@ const Login = (props) => {
   }
 
   return (
-    <div>
-      <header>
-        <h1>Login Page</h1>
-      </header>
-      <form onSubmit={handleLoginSubmit}>
-        <div>
-          <label>Email Address</label>
-          <input type="email" name="email" required />
-        </div>
-        <div>
-          <label>Password</label>
-          <input type="password" name="password"/>
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className="auth-wrapper">
+      <div className="auth-inner">
+        <form onSubmit={handleLoginSubmit}>
+          <h3>Sign In</h3>
+
+          <div className="form-group">
+            <label>Email address</label>
+            <input type="email" name="email" className="form-control" placeholder="Enter email" />
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input type="password" name="password" className="form-control" placeholder="Enter password" />
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-block">Login</button>
+          <p className="forgot-password text-right">
+            Don't have a account? <Link to={"/signup"}>Signup</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

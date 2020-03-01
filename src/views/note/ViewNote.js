@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { store } from '../../store';
 
 const ViewNote = (props) => {
 
-  const [userDetails, setUserDetails] = useState({email: "", password: ""})
+  const globalState = useContext(store);
 
   useEffect( () => {
     const fetchData = async () => {
-      const response = await fetch( process.env.REACT_APP_BASE_URL + '/note/:id', {
+      const response = await fetch( process.env.REACT_APP_BASE_URL + '/notes/'+ props.match.params.id, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': globalState.state.Authentication
+        },
         method: 'get'
       })
+      const noteData = await response.json()
       if (response.ok) {
-        props.history.push('/notes');
+        console.log(noteData)
       } else {
+        console.log(noteData)
         return false
       }
     }

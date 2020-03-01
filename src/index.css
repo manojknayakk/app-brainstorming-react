@@ -1,13 +1,141 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: #121212 !important;
+  min-height: 100vh;
+  display: flex;
+  font-weight: 400;
+  font-family: 'Fira Sans', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1,h2,h3,h4,h5,h6,label,span,p {
+  font-weight: 500;
+  font-family: 'Fira Sans', sans-serif;
+  color: #ffffff;
+}
+
+body, html, .App, #root, .auth-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.navbar-light {
+  background-color: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+}
+
+.navbar-brand{
+  font-weight: 800;
+}
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+}
+
+.auth-inner {
+  width: 450px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all .3s;
+  background-color: #1d1d1d;
+}
+
+.auth-wrapper .form-control:focus {
+  border-color: #167bff;
+  box-shadow: none;
+}
+
+.auth-wrapper h3 {
+  text-align: center;
+  margin: 0;
+  line-height: 1;
+  padding-bottom: 20px;
+}
+
+.custom-control-label {
+  font-weight: 400;
+}
+
+.forgot-password,
+.forgot-password a {
+  text-align: right;
+  font-size: 13px;
+  padding-top: 10px;
+  color: #7f7d7d;
+  margin: 0;
+}
+
+.forgot-password a {
+  color: #167bff;
+}
+
+a{
+  cursor: pointer;
+}
+
+.auth-wrapper{
+  height: calc(91vh);
+}
+
+.block {
+  height: 350px;
+  background: rgba(86,61,124,.15);
+  margin-bottom: 30px;
+  border-radius: 10px;
+  background-color: #1d1d1d;
+}
+
+.notesScreen{
+  margin: 30px auto 30px auto;
+}
+
+.notesScreen .notes_card, .notesScreen .notes_card:hover{
+  text-decoration: none !important;
+  color: white;
+  height: 80%;
+  overflow: hidden;
+}
+
+.notesScreen .bottom_buttons_container{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.notesScreen .label{
+  font-weight: bold;
+}
+
+.description {
+  overflow: hidden;
+  overflow-wrap: normal;
+  width: 100%;
+  height: 91%;
+  color: #d1d1d1;
+}
+
+.add-button-container{
+  min-width: 130px;
+  margin-left: auto;
+}
+
+.bottom_buttons_container .btn:first-child{
+  margin-right: 20px;
+}
+
+.notes-form-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  width: 100vw;
+}
+
+.notes-form{
+  min-width: 64%;
+  flex-wrap: wrap;
 }
