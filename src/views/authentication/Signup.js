@@ -40,13 +40,13 @@ const Signup = (props) => {
       dispatch({ type: 'login', newState: newState });
       props.history.push('/notes');
     } else {
-      if(Object.keys(userData).length !== 0 ){
-        Object.keys(userData).forEach(function(json_key) {
+      Object.keys(userData).forEach(function(json_key) {
+        if (Array.isArray(userData[json_key])){
           userData[json_key].map((item, key) =>
-            alert.show(json_key + " " + item)
+            alert.show(item)
           );
-        })
-      }
+        }
+      })
     }
   }
 

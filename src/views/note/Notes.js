@@ -21,7 +21,6 @@ const Notes = (props) => {
       })
       const responseJson = await response.json()
       if (response.ok) {
-        console.log(responseJson)
         setNotes(responseJson)
       } else {
         alert.show("Server is down.")

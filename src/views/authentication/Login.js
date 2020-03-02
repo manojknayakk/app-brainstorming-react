@@ -36,7 +36,6 @@ const Login = (props) => {
       dispatch({ type: 'login', newState: newState });
       props.history.push('/notes');
     } else {
-      console.log(userData)
       if (userData.error){
         alert.show(userData.error.user_authentication);
       }

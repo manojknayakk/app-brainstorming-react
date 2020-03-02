@@ -127,8 +127,8 @@ a{
   margin-left: auto;
 }
 
-.bottom_buttons_container .btn:first-child{
-  margin-right: 20px;
+.bottom_buttons_container .btn:last-child{
+  margin-left: 20px;
 }
 
 .notes-form-container{

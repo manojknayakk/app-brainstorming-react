@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { store } from '../../store';
 import Select from 'react-select'
 import { useAlert } from 'react-alert'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 const EditNote = (props) => {
   const alert = useAlert()
@@ -15,7 +16,6 @@ const EditNote = (props) => {
   const [userEmail, setUserEmail] = useState({})
   const [userRole, setUserRole] = useState({})
   const [roleOptions, setRoleOptions] = useState([])
-  const [descriptionRow, setDescriptionRow] = useState(24)
 
   useEffect( () => {
     const fetchData = async () => {
@@ -57,17 +57,6 @@ const EditNote = (props) => {
     fetchData();
   },[]);
 
-  const handleInputDescription = (event) => {
-    const textareaLineHeight = descriptionRow;
-  	event.target.rows = descriptionRow;
-		const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
-    if (descriptionRow < currentRows) {
-    	event.target.rows = currentRows;
-    }
-    setDescriptionRow(currentRows)
-    setDescription(event.target.value)
-  }
-
   const addUser = async (e) => {
     if (Object.keys(userEmail).length === 0 || Object.keys(userRole).length === 0){
       if (Object.keys(userEmail).length === 0){
@@ -76,6 +65,33 @@ const EditNote = (props) => {
       if (Object.keys(userRole).length === 0){
         alert.show("Please select a role.")
       }
+      return false
+    }
+    let duplicate = false
+    shared.map((val, idx)=> {
+      if (val.email.email.toLowerCase() === userEmail.toLowerCase()){
+        if(val._destroy === true){
+          setShared(
+            shared.filter((item, index) => {
+              if (index === idx) {
+                item._destroy = false
+                item.role.value = userRole.value
+                item.role.label = userRole.label
+                return item
+              }else{
+                return item
+              }
+            })
+          );
+          duplicate = true
+        }else{
+          alert.show("Note is already shared with the user.");
+          duplicate = true
+          return false
+        }
+      }
+    })
+    if (duplicate) {
       return false
     }
     const data = {
@@ -149,9 +165,11 @@ const EditNote = (props) => {
       props.history.push('/notes');
     } else {
       Object.keys(editNotesResponse).forEach(function(json_key) {
-        editNotesResponse[json_key].map((item, key) =>
-          alert.show(json_key + " " + item)
-        );
+        if (Array.isArray(editNotesResponse[json_key])){
+          editNotesResponse[json_key].map((item, key) =>
+            alert.show(item)
+          );
+        }
       })
     }
   }
@@ -163,7 +181,7 @@ const EditNote = (props) => {
           <input className="form-control my-3" placeholder="Article Title" type="text" name="title" value={title} onChange={event => setTitle(event.target.value)} required />
         </div>
         <div>
-          <textarea name="description" rows={descriptionRow} className="form-control mb-3" value={description} onChange={handleInputDescription} placeholder="Article Description" required></textarea>
+          <TextareaAutosize name="description" rowsMin={15} className="form-control mb-3" value={description} onChange={event => setDescription(event.target.value)} placeholder="Article Description" required />
         </div>
         { (isOwner) ?
           shared.map((val, idx)=> {

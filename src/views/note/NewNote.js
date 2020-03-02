@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { store } from '../../store';
 import Select from 'react-select'
 import { useAlert } from 'react-alert'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 const NewNote = (props) => {
   const alert = useAlert()
@@ -12,8 +13,8 @@ const NewNote = (props) => {
   const [userEmail, setUserEmail] = useState({})
   const [userRole, setUserRole] = useState({})
   const [roleOptions, setRoleOptions] = useState([])
+  const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [descriptionRow, setDescriptionRow] = useState(24)
 
   useEffect( () => {
     const fetchData = async () => {
@@ -36,16 +37,6 @@ const NewNote = (props) => {
     fetchData();
   },[]);
 
-  const handleInputDescription = (event) => {
-  	event.target.rows = descriptionRow;
-    const currentRows = ~~(event.target.scrollHeight / descriptionRow);
-    if (descriptionRow < currentRows) {
-    	event.target.rows = currentRows;
-    }
-    setDescriptionRow(currentRows)
-    setDescription(event.target.value)
-  }
-
   const addUser = async (e) => {
     if (Object.keys(userEmail).length === 0 || Object.keys(userRole).length === 0){
       if (Object.keys(userEmail).length === 0){
@@ -54,6 +45,17 @@ const NewNote = (props) => {
       if (Object.keys(userRole).length === 0){
         alert.show("Please select a role.")
       }
+      return false
+    }
+    let duplicate = false
+    shared.map((val, idx)=> {
+      if (val.email.email.toLowerCase() === userEmail.toLowerCase()){
+        alert.show("Note is already shared with the user.");
+        duplicate = true
+        return false
+      }
+    })
+    if (duplicate) {
       return false
     }
     const data = {
@@ -117,9 +119,11 @@ const NewNote = (props) => {
       return true
     } else {
       Object.keys(newNotesResponse).forEach(function(json_key) {
-        newNotesResponse[json_key].map((item, key) =>
-          alert.show(json_key + " " + item)
-        );
+        if (Array.isArray(newNotesResponse[json_key])){
+          newNotesResponse[json_key].map((item, key) =>
+            alert.show(item)
+          );
+        }
       })
       return false
     }
@@ -129,10 +133,10 @@ const NewNote = (props) => {
     <div className="notes-form-container">
       <form className="notes-form" onSubmit={handleCreateNoteSubmit}>
         <div>
-          <input className="form-control my-3" placeholder="Article Title" type="text" name="title" required />
+          <input className="form-control my-3" placeholder="Article Title" type="text" name="title" value={title} onChange={event => setTitle(event.target.value)} required />
         </div>
         <div>
-          <textarea name="description" rows={descriptionRow} className="form-control mb-3" value={description} onChange={handleInputDescription} placeholder="Article Description" required></textarea>
+          <TextareaAutosize name="description" rowsMin={15} className="form-control mb-3" value={description} onChange={event => setDescription(event.target.value)} placeholder="Article Description" required />
         </div>
         {
           shared.map((val, idx)=> {
